@@ -3,8 +3,8 @@
 var textractVisualizer = function() {
 
     let textractTree = {};
-    let blockIdMap = new Map();
-    let pageMap = new Map();
+    let blockIdMap = {};
+    let pageMap = {};
 
     $(document).ready(function() {
         console.log("Textract Visualizer loaded 001")
@@ -22,32 +22,47 @@ var textractVisualizer = function() {
 
         // process the textract json
         processTextract(JSON.parse($("pre").html()));
+        renderTree();
     })
 
     function processTextract(textract) {
-        let visualizer = $("#visualizer");
-        visualizer.append("<p>" + textract.length + "</p>");
+       // let visualizer = $("#visualizer");
+        //visualizer.append("<p>" + textract.length + "</p>");
         textract.forEach(block => {
-            visualizer.append("<p>" + block.block_type + "</p>");
+            //visualizer.append("<p>" + block.block_type + "</p>");
             if (block.block_type == 'PAGE') {
                 console.log('saving page');
-                pageMap.set(block.page, block);
+                pageMap[block.page] = block;
             } else {
                 console.log('saving non-page "' + block.block_type + '"')
-                blockIdMap.set(block.id, block);
+                blockIdMap[block.id] = block;
             }
-            /*if (block.relationships) {
-                block.relationships.forEach(rlnshipType => {
-                    console.log(block.block_type + ' has ' + rlnshipType.type + ' count: ' + rlnshipType.ids.length);
+        });
+        printOutRelationships(pageMap);
+        printOutRelationships(blockIdMap);
+        console.log('Full tree: ' + JSON.stringify(textractTree));
+    }
+
+    function printOutRelationships(blockMap) {
+        for (const key in blockMap) {
+            let block = blockMap[key];
+            let relationshipMap = block.relationships;
+            if (relationshipMap) {
+                relationshipMap.forEach(rlnshipType => {
+                    console.log(block.block_type + ' has ' + rlnshipType.ids.length + ' ' + rlnshipType.type);
                 });
             } else {
-                console.log('processed leaf node of type ' + block.block_type);
-            }*/
-        });
-        blockIdMap.forEach(block => {
+                console.log(block.block_type + ' has no relationships');
+            }
+        }
+    }
 
-        });
-        console.log('Top level pages: ' + pageMap.size)
-        console.log('Full tree: ' + JSON.stringify(textractTree));
+    function renderTree() {
+        let visualizer = $("#visualizer");
+        for (const pageNum in pageMap) {
+            let block = pageMap[pageNum];
+            let relationshipMap = block.relationships;
+            visualizer.append(`<div class='page' id='${pageNum}'>Page ${pageNum}</div>`)
+        }
     }
 }();

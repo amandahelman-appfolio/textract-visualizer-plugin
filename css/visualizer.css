@@ -1,0 +1,12 @@
+#visualizer {
+    letter-spacing: 1px;
+    font-family: 'lato', sans-serif;
+    font-weight: 300;
+}
+
+.page {
+    outline-style: solid;
+    outline-color: purple;
+    margin: 25px;
+    padding: 5px;
+}

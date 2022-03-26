@@ -8,7 +8,8 @@
   "content_scripts": [
     {
       "matches": ["https://af-ocr-production-batches-us-east-2.s3.us-east-2.amazonaws.com/*"],
-      "js": ["scripts/jquery-3.6.0.js", "scripts/textract-visualizer.js"]
+      "js": ["scripts/jquery-3.6.0.js", "scripts/textract-visualizer.js"],
+      "css": ["css/visualizer.css"]
     }
   ]
 }
