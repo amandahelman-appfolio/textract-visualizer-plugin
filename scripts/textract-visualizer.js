@@ -68,7 +68,7 @@ var textractVisualizer = function() {
         for (const pageNum in pageMap) {
             let block = pageMap[pageNum];
             let blockElementId = `page_${pageNum}`;
-            visualizer.append(`<div class='block page' id='${blockElementId}'>Page ${pageNum}</div>`)
+            visualizer.append(`<div class='block page' id='${blockElementId}'>Page ${pageNum} of ${Object.keys(pageMap).length}</div>`)
             renderChildNodes(block, blockElementId);
         }
     }
@@ -83,7 +83,12 @@ var textractVisualizer = function() {
                     let childBlock = blockIdMap[childId];
                     let blockClass = typeClassMap[childBlock.block_type];
                     console.log(`rendering ${childId} which is ${childBlock.block_type} (${blockClass})`);
-                    currentParent.append(`<div class='block ${blockClass}' id='${childId}'>Node ${childBlock.block_type}</div>`)
+                    currentParent.append(`<div class='block ${blockClass}' id='${childId}'>${childBlock.block_type}</div>`)
+                    currentChild = $(`#${childId}`);
+                    currentChild.append(`<div class='blockid'>${childId}</div>`);
+                    if (childBlock.block_type == 'WORD') {
+                        currentChild.append(`<div class='wordtext'>${childBlock.text}</div>`)
+                    }
                     renderChildNodes(childBlock, childId);
                 });
             });

@@ -1,13 +1,23 @@
 #visualizer {
-    letter-spacing: 1px;
-    font-family: 'lato', sans-serif;
-    font-weight: 300;
+    font-family: monospace;
+    color: dimgrey;
 }
 
 .block {
     outline-style: solid;
-    margin: 25px;
-    padding: 5px;
+    margin: 10px;
+    padding: 3px;
+}
+
+.blockid {
+    font-size: xx-small;
+    outline-style: none;
+}
+
+.wordtext {
+    outline-style: none;
+    color: black;
+    font-size: large;
 }
 
 .page {
@@ -20,6 +30,7 @@
 
 .word {
     outline-color: wheat;
+    display:inline-block;
 }
 
 .table {
