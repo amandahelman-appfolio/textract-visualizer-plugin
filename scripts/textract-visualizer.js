@@ -5,6 +5,15 @@ var textractVisualizer = function() {
     let textractTree = {};
     let blockIdMap = {};
     let pageMap = {};
+    const typeClassMap = {
+        'PAGE' : 'page',
+        'LINE' : 'line',
+        'WORD' : 'word',
+        'TABLE' : 'table',
+        'CELL' : 'cell',
+        'MERGED_CELL' : 'mergedcell',
+        'KEY_VALUE_SET' : 'keyvalue'
+    }
 
     $(document).ready(function() {
         console.log("Textract Visualizer loaded 001")
@@ -58,19 +67,26 @@ var textractVisualizer = function() {
         let visualizer = $("#visualizer");
         for (const pageNum in pageMap) {
             let block = pageMap[pageNum];
-            visualizer.append(`<div class='block page' id='page_${pageNum}'>Page ${pageNum}</div>`)
-            let relationshipMap = block.relationships;
-            if (relationshipMap) {
-                let currentPage = $("#page_" + pageNum);
-                relationshipMap.forEach(relationshipTypeMap => {
-                    console.log(pageNum + ' has ' + relationshipTypeMap.ids.length + ' ' + relationshipTypeMap.type);
-                    relationshipTypeMap.ids.forEach(childId => {
-                        let childBlock = blockIdMap[childId];
-                        console.log(`rendering ${childId} which is ${childBlock.block_type}`);
-                        currentPage.append(`<div class='block line'>Node ${childBlock.block_type}</div>`)
-                    });
+            let blockElementId = `page_${pageNum}`;
+            visualizer.append(`<div class='block page' id='${blockElementId}'>Page ${pageNum}</div>`)
+            renderChildNodes(block, blockElementId);
+        }
+    }
+
+    function renderChildNodes(block, blockElementId) {
+        let relationshipMap = block.relationships;
+        if (relationshipMap) {
+            let currentParent = $(`#${blockElementId}`);
+            relationshipMap.forEach(relationshipTypeMap => {
+                console.log(`Current ${block.block_type} block has ${relationshipTypeMap.ids.length} ${relationshipTypeMap.type}`);
+                relationshipTypeMap.ids.forEach(childId => {
+                    let childBlock = blockIdMap[childId];
+                    let blockClass = typeClassMap[childBlock.block_type];
+                    console.log(`rendering ${childId} which is ${childBlock.block_type} (${blockClass})`);
+                    currentParent.append(`<div class='block ${blockClass}' id='${childId}'>Node ${childBlock.block_type}</div>`)
+                    renderChildNodes(childBlock, childId);
                 });
-            }
+            });
         }
     }
 }();

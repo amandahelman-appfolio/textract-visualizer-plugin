@@ -17,3 +17,23 @@
 .line {
     outline-color: lime;
 }
+
+.word {
+    outline-color: wheat;
+}
+
+.table {
+    outline-color: teal;
+}
+
+.cell {
+    outline-color: crimson;
+}
+
+.mergedcell {
+    outline-color: magenta;
+}
+
+.keyvalue {
+    outline-color: black;
+}
