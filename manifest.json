@@ -1,0 +1,14 @@
+{
+  "name": "Textract Visualizer",
+  "description": "View textract files in Chrome",
+  "version": "1.0",
+  "manifest_version": 3,
+  "author": "Amanda Helman",
+  "permissions": ["activeTab", "scripting"],
+  "content_scripts": [
+    {
+      "matches": ["https://af-ocr-production-batches-us-east-2.s3.us-east-2.amazonaws.com/*"],
+      "js": ["scripts/jquery-3.6.0.js", "scripts/textract-visualizer.js"]
+    }
+  ]
+}
