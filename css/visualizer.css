@@ -4,9 +4,16 @@
     font-weight: 300;
 }
 
-.page {
+.block {
     outline-style: solid;
-    outline-color: purple;
     margin: 25px;
     padding: 5px;
+}
+
+.page {
+    outline-color: purple;
+}
+
+.line {
+    outline-color: lime;
 }

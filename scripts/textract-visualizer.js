@@ -26,10 +26,7 @@ var textractVisualizer = function() {
     })
 
     function processTextract(textract) {
-       // let visualizer = $("#visualizer");
-        //visualizer.append("<p>" + textract.length + "</p>");
         textract.forEach(block => {
-            //visualizer.append("<p>" + block.block_type + "</p>");
             if (block.block_type == 'PAGE') {
                 console.log('saving page');
                 pageMap[block.page] = block;
@@ -61,8 +58,19 @@ var textractVisualizer = function() {
         let visualizer = $("#visualizer");
         for (const pageNum in pageMap) {
             let block = pageMap[pageNum];
+            visualizer.append(`<div class='block page' id='page_${pageNum}'>Page ${pageNum}</div>`)
             let relationshipMap = block.relationships;
-            visualizer.append(`<div class='page' id='${pageNum}'>Page ${pageNum}</div>`)
+            if (relationshipMap) {
+                let currentPage = $("#page_" + pageNum);
+                relationshipMap.forEach(relationshipTypeMap => {
+                    console.log(pageNum + ' has ' + relationshipTypeMap.ids.length + ' ' + relationshipTypeMap.type);
+                    relationshipTypeMap.ids.forEach(childId => {
+                        let childBlock = blockIdMap[childId];
+                        console.log(`rendering ${childId} which is ${childBlock.block_type}`);
+                        currentPage.append(`<div class='block line'>Node ${childBlock.block_type}</div>`)
+                    });
+                });
+            }
         }
     }
 }();
