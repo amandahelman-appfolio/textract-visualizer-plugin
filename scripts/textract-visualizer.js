@@ -1,4 +1,4 @@
-// noinspection JSVoidFunctionReturnValueUsed,JSUnusedGlobalSymbols
+// noinspection JSVoidFunctionReturnValueUsed,JSUnusedGlobalSymbols,EqualityComparisonWithCoercionJS
 
 var textractVisualizer = function() {
 
