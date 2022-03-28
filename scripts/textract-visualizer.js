@@ -2,10 +2,9 @@
 
 var textractVisualizer = function() {
 
-    let textractTree = {};
     let blockIdMap = {};
     let pageMap = {};
-    const typeClassMap = {
+    const typeClassMap = { // maps types to css class name
         'PAGE' : 'page',
         'LINE' : 'line',
         'WORD' : 'word',
@@ -16,25 +15,32 @@ var textractVisualizer = function() {
     }
 
     $(document).ready(function() {
-        console.log("Textract Visualizer loaded 001")
+        if (document.URL.match(/https:\/\/af-ocr-production-batches-us-east-2.s3.us-east-2.amazonaws.com\/batch.+\/document_.+\/textract_output_.+?/)) {
+            console.log("Textract Visualizer loaded")
 
-        // Find the node with the textract json data and hide it
-        var bodyChildren = document.body.childNodes;
-        var pre = bodyChildren[0];
-        pre.hidden = true; // todo add checks that this is actually a textract doc, etc
-        //var jsonLength = (pre && pre.innerText || "").length ;
+            // Find the node with the textract json data and hide it
+            var bodyChildren = document.body.childNodes;
+            var pre = bodyChildren[0];
 
-        // add the visualizer content
-        addedDiv = document.createElement('div');
-        addedDiv.id = "visualizer";
-        document.body.appendChild(addedDiv);
+            // hide the raw json data
+            pre.hidden = true;
 
-        // process the textract json
-        processTextract(JSON.parse($("pre").html()));
-        renderTree();
+            // add the visualizer content
+            addedDiv = document.createElement('div');
+            addedDiv.id = "visualizer";
+            document.body.appendChild(addedDiv);
+
+            // process the textract json
+            processTextract(JSON.parse($("pre").html()));
+            renderTree();
+         } else {
+            console.log(`Url did not match target for Textract Visualizer (${document.URL})`);
+        }
     })
 
     function processTextract(textract) {
+        // Save each block in the list. Pages are at top level so they go in a map by page number.
+        // All other blocks are in a map by the block GUID
         textract.forEach(block => {
             if (block.block_type == 'PAGE') {
                 console.log('saving page');
@@ -46,7 +52,6 @@ var textractVisualizer = function() {
         });
         printOutRelationships(pageMap);
         printOutRelationships(blockIdMap);
-        console.log('Full tree: ' + JSON.stringify(textractTree));
     }
 
     function printOutRelationships(blockMap) {
@@ -64,6 +69,7 @@ var textractVisualizer = function() {
     }
 
     function renderTree() {
+        // iterate through the pages, and for each page render all the nodes underneath it
         let visualizer = $("#visualizer");
         for (const pageNum in pageMap) {
             let block = pageMap[pageNum];
@@ -74,6 +80,7 @@ var textractVisualizer = function() {
     }
 
     function renderChildNodes(block, blockElementId) {
+        // recursively render all the nodes that are in relationship lists of the passed-in node
         let relationshipMap = block.relationships;
         if (relationshipMap) {
             let currentParent = $(`#${blockElementId}`);
@@ -100,7 +107,7 @@ var textractVisualizer = function() {
                     if (childBlock.block_type == 'WORD') {
                         currentChild.append(`<div class='wordtext'>${childBlock.text}</div>`)
                     }
-                    renderChildNodes(childBlock, childElementId); // todo pass name of relationship
+                    renderChildNodes(childBlock, childElementId);
                 });
             });
         }

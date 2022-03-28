@@ -2,6 +2,8 @@
 
 This is a chrome browser plugin for redrawing raw textract output files as table data, within the browser window.
 
+Note that it is hardcoded to only redraw documents in the `af-ocr-production-batches-us-east-2 bucket`. If needed for other urls, then the checks in `textract-visualizer.js` and `manifest.json` will need to be changed.
+
 ## Installation instructions
 
 1. Check out this code locally
