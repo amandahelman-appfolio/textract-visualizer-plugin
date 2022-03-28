@@ -9,9 +9,21 @@
     padding: 3px;
 }
 
+.relationshiplabel {
+    outline-style: none;
+    font-size: small;
+    margin: 3px;
+}
+
+.metadatalabel {
+    font-size: xx-small;
+    display: inline-block;
+}
+
 .blockid {
     font-size: xx-small;
     outline-style: none;
+    cursor: pointer;
 }
 
 .wordtext {
