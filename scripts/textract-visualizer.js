@@ -122,7 +122,7 @@ var textractVisualizer = function() {
                     childContainer.append(`<div class='block ${blockClass}' id='${childElementId}'>${entityTypeText} <p class='metadatalabel'>block type: </p>${childBlock.block_type}</div>`)
                     currentChild = $(`#${childElementId}`);
                     currentChild.append(`<div class='blockid' onclick="navigator.clipboard.writeText('${childId}')">${childId}</div>`);
-                    if (childBlock.block_type == 'WORD') {
+                    if (childBlock.block_type == 'WORD' || childBlock.block_type == 'LINE') {
                         currentChild.append(`<div class='wordtext'>${childBlock.text}</div>`)
                     }
 
