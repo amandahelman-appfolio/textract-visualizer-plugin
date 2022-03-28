@@ -87,6 +87,11 @@ var textractVisualizer = function() {
             relationshipMap.forEach(relationshipTypeMap => {
                 console.log(`Current ${block.block_type} block has ${relationshipTypeMap.ids.length} ${relationshipTypeMap.type}`);
                 currentParent.append(`<div class="block relationshiplabel">List of ${relationshipTypeMap.type} relationships</div>`);
+                if (block.block_type == 'TABLE') {
+                    currentParent.append(`<div class="tablecellcontainer" id="${blockElementId}_headers"></div>`);
+                    currentParent.append(`<div class="tablecellcontainer" id="${blockElementId}_cells"></div>`);
+                    currentParent.append(`<div class="tablecellcontainer" id="${blockElementId}_mergedcells"></div>`);
+                }
                 relationshipTypeMap.ids.forEach(childId => {
                     let childBlock = blockIdMap[childId];
                     let blockClass = typeClassMap[childBlock.block_type];
@@ -99,14 +104,29 @@ var textractVisualizer = function() {
                         entityType = childBlock.entity_types[0];
                         entityTypeText = `<p class='metadatalabel'>entity type: </p>${entityType}`;
                     }
-                    let childElementId = `${blockElementId}_${childId}`;
+
                     console.log(`rendering ${childId} which is ${childBlock.block_type} (${blockClass})`);
-                    currentParent.append(`<div class='block ${blockClass}' id='${childElementId}'>${entityTypeText} <p class='metadatalabel'>block type: </p>${childBlock.block_type}</div>`)
+                    let childContainer = currentParent;
+                    if (block.block_type == 'TABLE') {
+                        if (childBlock.block_type == 'CELL') {
+                            if (entityType && entityType == 'COLUMN_HEADER') {
+                                childContainer = $(`#${blockElementId}_headers`);
+                            } else {
+                                childContainer = $(`#${blockElementId}_cells`);
+                            }
+                        } else if (childBlock.block_type == 'MERGED_CELL') {
+                            childContainer = $(`#${blockElementId}_mergedcells`);
+                        }
+                    }
+                    let childElementId = `${blockElementId}_${childId}`;
+                    childContainer.append(`<div class='block ${blockClass}' id='${childElementId}'>${entityTypeText} <p class='metadatalabel'>block type: </p>${childBlock.block_type}</div>`)
                     currentChild = $(`#${childElementId}`);
                     currentChild.append(`<div class='blockid' onclick="navigator.clipboard.writeText('${childId}')">${childId}</div>`);
                     if (childBlock.block_type == 'WORD') {
                         currentChild.append(`<div class='wordtext'>${childBlock.text}</div>`)
                     }
+
+                    // render all the children of the current childBlock
                     renderChildNodes(childBlock, childElementId);
                 });
             });

@@ -49,8 +49,15 @@
     outline-color: teal;
 }
 
+.tablecellcontainer {
+    outline-style: none;
+    margin: 0;
+    padding: 0;
+}
+
 .cell {
     outline-color: crimson;
+    display:inline-block;
 }
 
 .mergedcell {
